@@ -348,15 +348,9 @@
     }
 
     formatMoney(cents) {
-      // Format money based on Shopify's currency format
-      // This will use the shop's currency settings
-      const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: window.Shopify?.currency?.active || 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-      });
-      return formatter.format(cents / 100);
+      // Basic money formatting - adjust based on your currency settings
+      const amount = (cents / 100).toFixed(2);
+      return `$${amount}`;
     }
   }
 
