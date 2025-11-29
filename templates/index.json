@@ -704,16 +704,50 @@
     },
     "cstm_testimonial_djD3YW": {
       "type": "cstm-testimonial",
+      "blocks": {
+        "testimonial_dn9qTR": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "This product has completely changed my daily ritual. I feel more energized, focused, and confident.",
+            "author_name": "Alex R.",
+            "author_meta": "Verified customer",
+            "show_rating": true,
+            "rating": 5,
+            "logo_alt": "Brand logo"
+          }
+        },
+        "testimonial_TijTye": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "This product has completely changed my daily ritual. I feel more energized, focused, and confident.",
+            "author_name": "Alex R.",
+            "author_meta": "Verified customer",
+            "show_rating": true,
+            "rating": 5,
+            "logo_alt": "Brand logo"
+          }
+        },
+        "testimonial_xPXcaX": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "This product has completely changed my daily ritual. I feel more energized, focused, and confident.",
+            "author_name": "Alex R.",
+            "author_meta": "Verified customer",
+            "show_rating": true,
+            "rating": 5,
+            "logo_alt": "Brand logo"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_dn9qTR",
+        "testimonial_TijTye",
+        "testimonial_xPXcaX"
+      ],
       "name": "Custom testimonial",
       "settings": {
         "eyebrow": "Real customer stories",
-        "heading": "Loved by customers around the world",
-        "quote": "This product has completely changed my daily ritual. I feel more energized, focused, and confident.",
-        "author_name": "Alex R.",
-        "author_meta": "Verified customer",
-        "show_rating": true,
-        "rating": 5,
-        "logo_alt": "Brand logo"
+        "heading": "Loved by customers around the world"
       }
     }
   },
