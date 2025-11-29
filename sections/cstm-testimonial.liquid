@@ -11,6 +11,25 @@
     text-align: center;
   }
 
+  .cstm-testimonial__list {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .cstm-testimonial__list {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+  }
+
+  .cstm-testimonial__item {
+    padding: 1.75rem 1.5rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  }
+
   .cstm-testimonial__eyebrow {
     font-size: 0.75rem;
     letter-spacing: 0.16em;
@@ -71,40 +90,48 @@
       </h2>
     {% endif %}
 
-    {% if section.settings.show_rating %}
-      <div class="cstm-testimonial__rating" aria-label="{{ section.settings.rating | append: ' star rating' }}">
-        {% for i in (1..section.settings.rating) %}
-          <span aria-hidden="true">★</span>
+    {% if section.blocks.size > 0 %}
+      <div class="cstm-testimonial__list">
+        {% for block in section.blocks %}
+          <article class="cstm-testimonial__item" {{ block.shopify_attributes }}>
+            {% if block.settings.show_rating %}
+              <div class="cstm-testimonial__rating" aria-label="{{ block.settings.rating | append: ' star rating' }}">
+                {% for i in (1..block.settings.rating) %}
+                  <span aria-hidden="true">★</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.quote != blank %}
+              <p class="cstm-testimonial__quote">
+                “{{ block.settings.quote }}”
+              </p>
+            {% endif %}
+
+            {% if block.settings.author_name != blank %}
+              <p class="cstm-testimonial__author">
+                {{ block.settings.author_name }}
+              </p>
+            {% endif %}
+
+            {% if block.settings.author_meta != blank %}
+              <p class="cstm-testimonial__meta">
+                {{ block.settings.author_meta }}
+              </p>
+            {% endif %}
+
+            {% if block.settings.logo != blank %}
+              <div>
+                <img
+                  src="{{ block.settings.logo | image_url: width: 200 }}"
+                  alt="{{ block.settings.logo_alt | escape }}"
+                  class="cstm-testimonial__logo"
+                  loading="lazy"
+                >
+              </div>
+            {% endif %}
+          </article>
         {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if section.settings.quote != blank %}
-      <p class="cstm-testimonial__quote">
-        “{{ section.settings.quote }}”
-      </p>
-    {% endif %}
-
-    {% if section.settings.author_name != blank %}
-      <p class="cstm-testimonial__author">
-        {{ section.settings.author_name }}
-      </p>
-    {% endif %}
-
-    {% if section.settings.author_meta != blank %}
-      <p class="cstm-testimonial__meta">
-        {{ section.settings.author_meta }}
-      </p>
-    {% endif %}
-
-    {% if section.settings.logo != blank %}
-      <div>
-        <img
-          src="{{ section.settings.logo | image_url: width: 200 }}"
-          alt="{{ section.settings.logo_alt | escape }}"
-          class="cstm-testimonial__logo"
-          loading="lazy"
-        >
       </div>
     {% endif %}
   </div>
@@ -128,50 +155,58 @@
       "label": "Heading",
       "default": "Loved by customers around the world"
     },
+  ],
+  "blocks": [
     {
-      "type": "textarea",
-      "id": "quote",
-      "label": "Testimonial quote",
-      "default": "This product has completely changed my daily ritual. I feel more energized, focused, and confident."
-    },
-    {
-      "type": "text",
-      "id": "author_name",
-      "label": "Customer name",
-      "default": "Alex R."
-    },
-    {
-      "type": "text",
-      "id": "author_meta",
-      "label": "Customer details",
-      "info": "For example: Location, profession, or short context.",
-      "default": "Verified customer"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "label": "Show star rating",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "rating",
-      "min": 1,
-      "max": 5,
-      "step": 1,
-      "label": "Rating",
-      "default": 5
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo or badge (optional)"
-    },
-    {
-      "type": "text",
-      "id": "logo_alt",
-      "label": "Logo alt text",
-      "default": "Brand logo"
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Testimonial quote",
+          "default": "This product has completely changed my daily ritual. I feel more energized, focused, and confident."
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Customer name",
+          "default": "Alex R."
+        },
+        {
+          "type": "text",
+          "id": "author_meta",
+          "label": "Customer details",
+          "info": "For example: Location, profession, or short context.",
+          "default": "Verified customer"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_rating",
+          "label": "Show star rating",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Rating",
+          "default": 5
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo or badge (optional)"
+        },
+        {
+          "type": "text",
+          "id": "logo_alt",
+          "label": "Logo alt text",
+          "default": "Brand logo"
+        }
+      ]
     }
   ],
   "presets": [
