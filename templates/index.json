@@ -701,6 +701,20 @@
         "padding-block-end": 48,
         "gap_between_elements": 100
       }
+    },
+    "cstm_testimonial_djD3YW": {
+      "type": "cstm-testimonial",
+      "name": "Custom testimonial",
+      "settings": {
+        "eyebrow": "Real customer stories",
+        "heading": "Loved by customers around the world",
+        "quote": "This product has completely changed my daily ritual. I feel more energized, focused, and confident.",
+        "author_name": "Alex R.",
+        "author_meta": "Verified customer",
+        "show_rating": true,
+        "rating": 5,
+        "logo_alt": "Brand logo"
+      }
     }
   },
   "order": [
@@ -709,6 +723,7 @@
     "featured_product_pW7dEU",
     "product_list_8kR3Hb",
     "collection_list_iAQiBH",
-    "marquee_9AMajF"
+    "marquee_9AMajF",
+    "cstm_testimonial_djD3YW"
   ]
 }
