@@ -1,0 +1,365 @@
+{%- liquid
+  assign free_shipping_threshold = 5000 | default: 5000
+  assign cart_total = cart.total_price
+  assign remaining_amount = free_shipping_threshold | minus: cart_total
+  assign progress_percentage = cart_total | times: 100 | divided_by: free_shipping_threshold
+  
+  if progress_percentage > 100
+    assign progress_percentage = 100
+  endif
+  
+  if remaining_amount <= 0
+    assign is_free_shipping = true
+  else
+    assign is_free_shipping = false
+  endif
+-%}
+
+<free-shipping-bar
+  class="shipping-bar"
+  data-threshold="{{ free_shipping_threshold }}"
+  data-cart-total="{{ cart_total }}"
+  {% if is_free_shipping %}data-achieved{% endif %}
+>
+  <div class="shipping-bar__container">
+    <div class="shipping-bar__content">
+      {% if is_free_shipping %}
+        <div class="shipping-bar__message shipping-bar__message--success">
+          <span class="shipping-bar__icon">🎉</span>
+          <span class="shipping-bar__text">
+            <strong>Congratulations!</strong> You've unlocked free shipping!
+          </span>
+        </div>
+      {% else %}
+        <div class="shipping-bar__message">
+          <span class="shipping-bar__icon">🚚</span>
+          <span class="shipping-bar__text">
+            Add <strong class="shipping-bar__remaining">{{ remaining_amount | money }}</strong> more for <strong>free shipping</strong>
+          </span>
+        </div>
+      {% endif %}
+    </div>
+    
+    <div class="shipping-bar__progress-wrapper">
+      <div class="shipping-bar__progress-track">
+        <div 
+          class="shipping-bar__progress-fill"
+          style="--progress: {{ progress_percentage }}%"
+          role="progressbar"
+          aria-valuenow="{{ progress_percentage }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Free shipping progress"
+        >
+          <div class="shipping-bar__progress-glow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</free-shipping-bar>
+
+{% stylesheet %}
+  .shipping-bar {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .shipping-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .shipping-bar__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .shipping-bar__content {
+    margin-bottom: 0.75rem;
+  }
+
+  .shipping-bar__message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #ffffff;
+    font-size: 0.875rem;
+    text-align: center;
+    animation: slideInDown 0.5s ease-out;
+  }
+
+  .shipping-bar__message--success {
+    animation: bounceIn 0.6s ease-out;
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .shipping-bar__icon {
+    font-size: 1.25rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .shipping-bar__text {
+    line-height: 1.5;
+  }
+
+  .shipping-bar__text strong {
+    font-weight: 600;
+  }
+
+  .shipping-bar__remaining {
+    color: #ffd700;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+  }
+
+  .shipping-bar__progress-wrapper {
+    width: 100%;
+  }
+
+  .shipping-bar__progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .shipping-bar__progress-fill {
+    height: 100%;
+    width: var(--progress);
+    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+    border-radius: 10px;
+    position: relative;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: progressGrow 0.8s ease-out;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  @keyframes progressGrow {
+    from {
+      width: 0;
+    }
+  }
+
+  .shipping-bar__progress-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progressShimmer 2s infinite;
+  }
+
+  @keyframes progressShimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .shipping-bar[data-achieved] .shipping-bar__progress-fill {
+    background: linear-gradient(90deg, #4ade80, #22c55e, #4ade80);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+    animation: successPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes successPulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(34, 197, 94, 0.9);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .shipping-bar {
+      padding: 0.875rem 1rem;
+    }
+
+    .shipping-bar__message {
+      font-size: 0.8125rem;
+      flex-wrap: wrap;
+    }
+
+    .shipping-bar__icon {
+      font-size: 1.125rem;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  class FreeShippingBar extends HTMLElement {
+    constructor() {
+      super();
+      this.threshold = parseInt(this.dataset.threshold) || 5000;
+      this.updateCartTotal();
+    }
+
+    connectedCallback() {
+      // Listen for cart updates
+      document.addEventListener('cart:updated', () => this.updateCartTotal());
+      
+      // Also listen for custom cart events
+      window.addEventListener('cart:change', () => this.updateCartTotal());
+      
+      // Update on page load if cart data is available
+      if (window.cart && window.cart.total_price) {
+        this.updateFromCart(window.cart);
+      }
+    }
+
+    updateCartTotal() {
+      // Fetch latest cart data
+      fetch('/cart.js')
+        .then(response => response.json())
+        .then(cart => {
+          this.updateFromCart(cart);
+        })
+        .catch(error => {
+          console.error('Error fetching cart:', error);
+        });
+    }
+
+    updateFromCart(cart) {
+      const cartTotal = cart.total_price || 0;
+      const remainingAmount = Math.max(0, this.threshold - cartTotal);
+      const progressPercentage = Math.min(100, (cartTotal / this.threshold) * 100);
+      const isFreeShipping = remainingAmount <= 0;
+
+      // Update data attributes
+      this.dataset.cartTotal = cartTotal;
+      if (isFreeShipping) {
+        this.setAttribute('data-achieved', '');
+      } else {
+        this.removeAttribute('data-achieved');
+      }
+
+      // Update progress bar
+      const progressFill = this.querySelector('.shipping-bar__progress-fill');
+      if (progressFill) {
+        progressFill.style.setProperty('--progress', `${progressPercentage}%`);
+        progressFill.setAttribute('aria-valuenow', Math.round(progressPercentage));
+      }
+
+      // Update message
+      const messageEl = this.querySelector('.shipping-bar__message');
+      const remainingEl = this.querySelector('.shipping-bar__remaining');
+      
+      if (isFreeShipping) {
+        if (!messageEl.classList.contains('shipping-bar__message--success')) {
+          messageEl.classList.add('shipping-bar__message--success');
+          messageEl.innerHTML = `
+            <span class="shipping-bar__icon">🎉</span>
+            <span class="shipping-bar__text">
+              <strong>Congratulations!</strong> You've unlocked free shipping!
+            </span>
+          `;
+        }
+      } else {
+        if (messageEl.classList.contains('shipping-bar__message--success')) {
+          messageEl.classList.remove('shipping-bar__message--success');
+        }
+        if (remainingEl) {
+          remainingEl.textContent = this.formatMoney(remainingAmount);
+        } else {
+          messageEl.innerHTML = `
+            <span class="shipping-bar__icon">🚚</span>
+            <span class="shipping-bar__text">
+              Add <strong class="shipping-bar__remaining">${this.formatMoney(remainingAmount)}</strong> more for <strong>free shipping</strong>
+            </span>
+          `;
+        }
+      }
+    }
+
+    formatMoney(cents) {
+      // Format money based on Shopify's currency format
+      // This will use the shop's currency settings
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: window.Shopify?.currency?.active || 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+      return formatter.format(cents / 100);
+    }
+  }
+
+  customElements.define('free-shipping-bar', FreeShippingBar);
+</script>
+
